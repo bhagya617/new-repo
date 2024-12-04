@@ -13,7 +13,7 @@ WHERE HireDate < DATEADD(YEAR, -5, GETDATE())
   AND MONTH(HireDate) = MONTH(GETDATE());
 
  --q4==>> Perform Operations in a Single Transaction
- 
+ Begin Transaction;
  
 CREATE TABLE Employee (
     EmpNo INT PRIMARY KEY,
@@ -24,23 +24,25 @@ CREATE TABLE Employee (
  
 --single transaction!!!!!!
  
-BEGIN TRANSACTION;
- 
 -- a. Inserting 3 rows!!!!!!
 INSERT INTO Employee VALUES (1, 'Alice', 1000, '2020-01-15');
 INSERT INTO Employee VALUES (2, 'Bob', 1500, '2019-03-10');
 INSERT INTO Employee VALUES (3, 'Charlie', 2000, '2021-05-20');
  
+ SELECT * FROM Employee
 -- b. Update the second row salary with a 15% increment!!!!
 UPDATE Employee
 SET Sal = Sal * 1.15
 WHERE EmpNo = 2;
- 
+
+SELECT * FROM Employee
+
 -- c. Delete the first row!!!!!!!!
  BEGIN TRANSACTION;
 DELETE FROM Employee
 WHERE empno = 1;
 ROLLBACK;
+
 SELECT * FROM Employee
 
  --q5==>>Create a Function to Calculate Bonus
@@ -74,33 +76,23 @@ WHERE deptno = 20
 SELECT ename, sal, dbo.CalculateBonus(deptno, sal) AS bonus
 FROM EMP
 WHERE deptno NOT IN (10, 20)
+
+
 --q6==>>>Procedure to Update Salary for Employees in Sales Department
- 
-CREATE  PROCEDURE UpdateSalaryByJob AS
-BEGIN
-    -- Update the salary for employees with the job SALESMAN
-    UPDATE EMP
-    SET SAL = SAL + 500
-    WHERE JOB = 'SALESMAN'
-      AND SAL < 1500;
-END;
 
-EXEC UpdateSalaryByJob;
-
---Modifying here since it has been craeted already!!!!!!!!!!!!
-ALTER PROCEDURE UpdateSalaryByJob
+CREATE OR ALTER PROCEDURE UpdateSalaryByJob
 AS
 BEGIN
     -- Update the salary for employees with the job SALESMAN
     UPDATE EMP
     SET SAL = SAL + 500
     WHERE JOB = 'SALESMAN'
-      AND SAL < 1500;
+      AND SAL < 1500
  
     -- Displaying!!!!!!!
     SELECT EMPNO, ENAME, JOB, SAL
     FROM EMP
-    WHERE JOB = 'SALESMAN';
+    WHERE JOB = 'SALESMAN'
 END;
  
  --updated 
