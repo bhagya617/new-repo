@@ -261,7 +261,7 @@ namespace RailwayReservationSystem
                         RestoreTrain();
                         break;
                     case 9:
-                        return; // Logout
+                        return; 
                     default:
                         Console.WriteLine("Invalid choice. Please try again.");
                         break;
@@ -331,7 +331,7 @@ namespace RailwayReservationSystem
             Console.Write("Is it Stalled? Enter 0 for Active & 1 for Stalled: ");
             int isStalled = int.Parse(Console.ReadLine());
 
-            // Assuming Database.Instance.GetConnection() provides a valid SqlConnection object.
+            
             using (SqlConnection conn = Database.Instance.GetConnection())
             {
                 try
