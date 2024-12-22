@@ -47,14 +47,14 @@ namespace RailwayReservationSystem
         {
             Console.WriteLine("\nAdmin Menu:");
             Console.WriteLine("1. Add Train");
-            Console.WriteLine("2. Delete Train");
-            Console.WriteLine("3. Update Train");
-            Console.WriteLine("4. View Active Trains");
-            Console.WriteLine("5. View Stalled Trains");
-            Console.WriteLine("6. View all Trains");
-            Console.WriteLine("7. Marked as Deleted Trains");
-            Console.WriteLine("8. Restore Trains");
-            Console.WriteLine("9. Logout");
+            
+            Console.WriteLine("2. Update Train");
+            Console.WriteLine("3. View Active Trains");
+            Console.WriteLine("4. View Stalled Trains");
+            Console.WriteLine("5. View all Trains");
+            Console.WriteLine("6. Marked as Deleted Trains");
+            Console.WriteLine("7. Restore Trains");
+            Console.WriteLine("8. Logout");
         }
     }
 
@@ -233,30 +233,28 @@ namespace RailwayReservationSystem
                     case 1:
                         AddTrain();
                         break;
+                             
                     case 2:
-                        DeleteTrain();
-                        break;
-                    case 3:
                         UpdateTrain();
                         break;
 
 
-                    case 4:
+                    case 3:
                         ViewActiveTrains();
                         break;
-                    case 5:
+                    case 4:
                         ViewStalledTrains();
                         break;
-                    case 6:
+                    case 5:
                         ViewAllTrains();
                         break;
-                    case 7:
+                    case 6:
                         MarkTrainAsDeleted();
                         break;
-                    case 8:
+                    case 7:
                         RestoreTrain();
                         break;
-                    case 9:
+                    case 8:
                         return; // Logout
                     default:
                         Console.WriteLine("Invalid choice. Please try again.");
@@ -359,30 +357,30 @@ namespace RailwayReservationSystem
 
 
 
-        // Delete Train
-        static void DeleteTrain()
-        {
-            Console.Write("Enter Train ID to delete: ");
-            int trainId = int.Parse(Console.ReadLine());
+        //// Delete Train
+        //static void DeleteTrain()
+        //{
+        //    Console.Write("Enter Train ID to delete: ");
+        //    int trainId = int.Parse(Console.ReadLine());
 
-            using (SqlConnection conn = Database.Instance.GetConnection())
-            {
-                try
-                {
-                    conn.Open();
-                    SqlCommand cmd = new SqlCommand("DeleteTrain", conn);
-                    cmd.CommandType = CommandType.StoredProcedure;
-                    cmd.Parameters.AddWithValue("@TrainId", trainId);
+        //    using (SqlConnection conn = Database.Instance.GetConnection())
+        //    {
+        //        try
+        //        {
+        //            conn.Open();
+        //            SqlCommand cmd = new SqlCommand("DeleteTrain", conn);
+        //            cmd.CommandType = CommandType.StoredProcedure;
+        //            cmd.Parameters.AddWithValue("@TrainId", trainId);
 
-                    cmd.ExecuteNonQuery();
-                    Console.WriteLine("Train deleted successfully!");
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine($"Error: {ex.Message}");
-                }
-            }
-        }
+        //            cmd.ExecuteNonQuery();
+        //            Console.WriteLine("Train deleted successfully!");
+        //        }
+        //        catch (Exception ex)
+        //        {
+        //            Console.WriteLine($"Error: {ex.Message}");
+        //        }
+        //    }
+        //}
 
 
         static void UpdateTrain()
