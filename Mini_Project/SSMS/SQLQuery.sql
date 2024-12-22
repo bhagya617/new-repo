@@ -158,7 +158,7 @@ BEGIN
 END;
 --CREATE PROCEDURE CancelTrain
 --    @TrainID INT,
---    @Class NVARCHAR(20),
+--    @Class VARCHAR(20),
 --    @TicketsToCancel INT,
 --    @UserId INT
 --AS
