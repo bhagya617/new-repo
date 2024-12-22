@@ -282,6 +282,6 @@ INSERT INTO TicketPrices (Class, Price) VALUES
   
 SELECT * FROM Users;
 SELECT * FROM Train;
-
+delete from Train where TrainId=8;
 
 
