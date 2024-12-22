@@ -275,11 +275,22 @@ INSERT INTO TicketPrices (Class, Price) VALUES
 ('Second', 700),
 ('Sleeper', 300);
 
+CREATE TABLE Bookings (
+    BookingId INT PRIMARY KEY IDENTITY(1,1),
+    UserId INT NOT NULL,
+    TrainId INT NOT NULL,
+    Class NVARCHAR(50) NOT NULL,
+    BookingDate DATETIME DEFAULT GETDATE(),
+    Status NVARCHAR(50) DEFAULT 'Booked'
+);
+
+
+
 
  select * from Train
  select * from dbo.Admin
 
-  
+ select * from Bookings;
 SELECT * FROM Users;
 SELECT * FROM Train;
 
