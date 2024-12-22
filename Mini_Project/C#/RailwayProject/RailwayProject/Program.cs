@@ -469,13 +469,13 @@ namespace RailwayReservationSystem
         // View Stalled Trains
         static void ViewStalledTrains()
         {
-            using (SqlConnection conn = Database.Instance.GetConnection()) // Update with your actual connection method
+            using (SqlConnection conn = Database.Instance.GetConnection()) 
             {
                 try
                 {
                     conn.Open();
 
-                    SqlCommand cmd = new SqlCommand("GetStalledTrains", conn); // Stored Procedure Name
+                    SqlCommand cmd = new SqlCommand("GetStalledTrains", conn); 
                     cmd.CommandType = CommandType.StoredProcedure;
 
                     SqlDataReader reader = cmd.ExecuteReader();
