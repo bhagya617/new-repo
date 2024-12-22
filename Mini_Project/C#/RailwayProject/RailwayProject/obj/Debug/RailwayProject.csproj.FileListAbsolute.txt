@@ -1,0 +1,7 @@
+C:\Users\bhagyar\source\repos\Mini_Project\C#\RailwayProject\RailwayProject\bin\Debug\RailwayProject.exe.config
+C:\Users\bhagyar\source\repos\Mini_Project\C#\RailwayProject\RailwayProject\bin\Debug\RailwayProject.exe
+C:\Users\bhagyar\source\repos\Mini_Project\C#\RailwayProject\RailwayProject\bin\Debug\RailwayProject.pdb
+C:\Users\bhagyar\source\repos\Mini_Project\C#\RailwayProject\RailwayProject\obj\Debug\RailwayProject.csproj.AssemblyReference.cache
+C:\Users\bhagyar\source\repos\Mini_Project\C#\RailwayProject\RailwayProject\obj\Debug\RailwayProject.csproj.CoreCompileInputs.cache
+C:\Users\bhagyar\source\repos\Mini_Project\C#\RailwayProject\RailwayProject\obj\Debug\RailwayProject.exe
+C:\Users\bhagyar\source\repos\Mini_Project\C#\RailwayProject\RailwayProject\obj\Debug\RailwayProject.pdb
