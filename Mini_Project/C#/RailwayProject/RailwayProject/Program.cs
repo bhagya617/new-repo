@@ -464,13 +464,13 @@ namespace RailwayReservationSystem
         // View Stalled Trains
         static void ViewStalledTrains()
         {
-            using (SqlConnection conn = Database.Instance.GetConnection()) 
+            using (SqlConnection conn = Database.Instance.GetConnection())
             {
                 try
                 {
                     conn.Open();
 
-                    SqlCommand cmd = new SqlCommand("GetStalledTrains", conn); 
+                    SqlCommand cmd = new SqlCommand("GetStalledTrains", conn);
                     cmd.CommandType = CommandType.StoredProcedure;
 
                     SqlDataReader reader = cmd.ExecuteReader();
@@ -623,7 +623,7 @@ namespace RailwayReservationSystem
                 if (!IsTrainOperational(trainId))
                 {
                     Console.WriteLine("The train is currently stalled and not operational. Please select a different train.");
-                    continue; 
+                    continue;
                 }
 
                 Console.Write("Enter Class (First/Second/Sleeper): ");
@@ -700,36 +700,39 @@ namespace RailwayReservationSystem
 
 
 
-
-
-
         static void CancelBooking()
         {
-            Console.WriteLine("Enter Train ID: ");
-            int trainId = int.Parse(Console.ReadLine());
+            Console.Write("Enter User ID: ");
+            int userId = int.Parse(Console.ReadLine());
+            Console.Write("Enter Booking ID: ");
+            int bookingId = int.Parse(Console.ReadLine());
 
-            Console.WriteLine("Enter Class (First, Second, Sleeper): ");
-            string classType = Console.ReadLine();
-
-            Console.WriteLine("Enter number of tickets to cancel: ");
-            int ticketsToCancel = int.Parse(Console.ReadLine());
-
-            using (var connection = Database.Instance.GetConnection())
+            using (SqlConnection conn = Database.Instance.GetConnection())
             {
                 try
                 {
-                    connection.Open();
+                    conn.Open();
 
-                    using (SqlCommand cmd = new SqlCommand("CancelTrain", connection))
+                    // Check if booking exists
+                    SqlCommand checkCmd = new SqlCommand("SELECT * FROM Bookings WHERE BookingId = @BookingId AND UserId = @UserId", conn);
+                    checkCmd.Parameters.AddWithValue("@BookingId", bookingId);
+                    checkCmd.Parameters.AddWithValue("@UserId", userId);
+                    SqlDataReader reader = checkCmd.ExecuteReader();
+
+                    if (reader.HasRows)
                     {
+                        reader.Close();
+                        SqlCommand cmd = new SqlCommand("CancelBooking", conn);
                         cmd.CommandType = CommandType.StoredProcedure;
-
-                        cmd.Parameters.AddWithValue("@TrainID", trainId);
-                        cmd.Parameters.AddWithValue("@Class", classType);
-                        cmd.Parameters.AddWithValue("@TicketsToCancel", ticketsToCancel);
-
+                        cmd.Parameters.AddWithValue("@BookingId", bookingId);
                         cmd.ExecuteNonQuery();
-                        Console.WriteLine("Cancellation successful!");
+                        Console.WriteLine("Booking canceled successfully!");
+
+                        
+                    }
+                    else
+                    {
+                        Console.WriteLine("Booking not found for this user.");
                     }
                 }
                 catch (Exception ex)
@@ -740,6 +743,46 @@ namespace RailwayReservationSystem
         }
     }
 }
+
+
+
+//        static void CancelBooking()
+//        {
+//            Console.WriteLine("Enter Train ID: ");
+//            int trainId = int.Parse(Console.ReadLine());
+
+//            Console.WriteLine("Enter Class (First, Second, Sleeper): ");
+//            string classType = Console.ReadLine();
+
+//            Console.WriteLine("Enter number of tickets to cancel: ");
+//            int ticketsToCancel = int.Parse(Console.ReadLine());
+
+//            using (var connection = Database.Instance.GetConnection())
+//            {
+//                try
+//                {
+//                    connection.Open();
+
+//                    using (SqlCommand cmd = new SqlCommand("CancelTrain", connection))
+//                    {
+//                        cmd.CommandType = CommandType.StoredProcedure;
+
+//                        cmd.Parameters.AddWithValue("@TrainID", trainId);
+//                        cmd.Parameters.AddWithValue("@Class", classType);
+//                        cmd.Parameters.AddWithValue("@TicketsToCancel", ticketsToCancel);
+
+//                        cmd.ExecuteNonQuery();
+//                        Console.WriteLine("Cancellation successful!");
+//                    }
+//                }
+//                catch (Exception ex)
+//                {
+//                    Console.WriteLine($"Error: {ex.Message}");
+//                }
+//            }
+//        }
+//    }
+//}
 
 //        static void CancelBooking()
 //        {
