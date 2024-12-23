@@ -47,7 +47,6 @@ namespace RailwayReservationSystem
         {
             Console.WriteLine("\nAdmin Menu:");
             Console.WriteLine("1. Add Train");
-            
             Console.WriteLine("2. Update Train");
             Console.WriteLine("3. View Active Trains");
             Console.WriteLine("4. View Stalled Trains");
@@ -233,7 +232,7 @@ namespace RailwayReservationSystem
                     case 1:
                         AddTrain();
                         break;
-                             
+
                     case 2:
                         UpdateTrain();
                         break;
@@ -601,88 +600,110 @@ namespace RailwayReservationSystem
                 {
                     return (int)result;
                 }
-                return 0; // If no matching class found, return 0 as fallback
+                return 0; 
             }
         }
-
-
 
 
 
 
         static void BookTrain()
         {
-            while (true)
+            using (SqlConnection conn = Database.Instance.GetConnection())
             {
+                conn.Open();
+
+                Console.Write("Enter User ID: ");
+                int userId = int.Parse(Console.ReadLine());
+
                 Console.Write("Enter Train ID: ");
                 int trainId = int.Parse(Console.ReadLine());
 
-                // Check if the train is not stalled adn then only proceed
+                // Check if the train is operational
                 if (!IsTrainOperational(trainId))
                 {
                     Console.WriteLine("The train is currently stalled and not operational. Please select a different train.");
-                    continue;
+                    return;
                 }
 
-                Console.Write("Enter Class (First/Second/Sleeper): ");
+                Console.Write("Enter Class: ");
                 string trainClass = Console.ReadLine().ToLower();
 
                 Console.Write("Enter Number of Tickets: ");
                 int ticketsToBook = int.Parse(Console.ReadLine());
 
-                using (SqlConnection conn = Database.Instance.GetConnection())
-                {
-                    conn.Open();
+                // Check ticket availability
+                string checkQuery = @"
+            SELECT AvailableTickets
+            FROM Tickets
+            WHERE TrainId = @TrainId AND Class = @Class";
 
-                    // Check availability first
-                    SqlCommand checkCmd = new SqlCommand("SELECT AvailableTickets FROM Tickets WHERE TrainId = @TrainId AND Class = @Class", conn);
+                using (SqlCommand checkCmd = new SqlCommand(checkQuery, conn))
+                {
                     checkCmd.Parameters.AddWithValue("@TrainId", trainId);
                     checkCmd.Parameters.AddWithValue("@Class", trainClass);
+
                     int availableTickets = (int)checkCmd.ExecuteScalar();
 
                     if (availableTickets >= ticketsToBook)
                     {
                         // Reduce available tickets
-                        SqlCommand updateCmd = new SqlCommand("UPDATE Tickets SET AvailableTickets = AvailableTickets - @TicketsToBook WHERE TrainId = @TrainId AND Class = @Class", conn);
-                        updateCmd.Parameters.AddWithValue("@TicketsToBook", ticketsToBook);
-                        updateCmd.Parameters.AddWithValue("@TrainId", trainId);
-                        updateCmd.Parameters.AddWithValue("@Class", trainClass);
+                        string updateQuery = @"
+                    UPDATE Tickets
+                    SET AvailableTickets = AvailableTickets - @TicketsToBook
+                    WHERE TrainId = @TrainId AND Class = @Class";
 
-                        SqlParameter bookingIdParam = new SqlParameter("@BookingId", SqlDbType.Int)
+                        using (SqlCommand updateCmd = new SqlCommand(updateQuery, conn))
                         {
-                            Direction = ParameterDirection.Output
-                        };
-                        updateCmd.Parameters.Add(bookingIdParam);
+                            updateCmd.Parameters.AddWithValue("@TicketsToBook", ticketsToBook);
+                            updateCmd.Parameters.AddWithValue("@TrainId", trainId);
+                            updateCmd.Parameters.AddWithValue("@Class", trainClass);
+                            updateCmd.ExecuteNonQuery();
+                        }
 
-                        updateCmd.ExecuteNonQuery();
+                        // Insert booking details
+                        string insertQuery = @"
+                    INSERT INTO Bookings (UserId, TrainId, Class, Status)
+                    VALUES (@UserId, @TrainId, @Class, 'Booked')";
 
+                        using (SqlCommand insertCmd = new SqlCommand(insertQuery, conn))
+                        {
+                            insertCmd.Parameters.AddWithValue("@UserId", userId);
+                            insertCmd.Parameters.AddWithValue("@TrainId", trainId);
+                            insertCmd.Parameters.AddWithValue("@Class", trainClass);
+                            insertCmd.ExecuteNonQuery();
+                        }
 
-                        int pricePerTicket = GetPriceForClass(trainClass);
-                        int totalAmount = ticketsToBook * pricePerTicket;
+                        // Retrieve the BookingID HERE !!!!!
+                        string retrieveQuery = @"
+                    SELECT TOP 1 BookingId
+                    FROM Bookings
+                    WHERE UserId = @UserId AND TrainId = @TrainId AND Class = @Class
+                    ORDER BY BookingDate DESC";
 
-                        Console.WriteLine($"Booking successful! Total amount: Rs.{totalAmount}");
-                        break;
+                        using (SqlCommand retrieveCmd = new SqlCommand(retrieveQuery, conn))
+                        {
+                            retrieveCmd.Parameters.AddWithValue("@UserId", userId);
+                            retrieveCmd.Parameters.AddWithValue("@TrainId", trainId);
+                            retrieveCmd.Parameters.AddWithValue("@Class", trainClass);
+
+                            int bookingId = (int)retrieveCmd.ExecuteScalar();
+                            int pricePerTicket = GetPriceForClass(trainClass);
+                            int totalAmount = ticketsToBook * pricePerTicket;
+                            Console.WriteLine($"Booking successful! Total amount to be Paid: Rs.{totalAmount}");
+
+                            Console.WriteLine($"User ID: {userId}");
+                            Console.WriteLine($"Booking ID: {bookingId}");
+                        }
                     }
                     else
                     {
-                        Console.WriteLine("Not enough seats available for the selected class. Please choose another class.");
-
-                        Console.Write("Do you want to try booking for another class? (Y/N): ");
-                        string choice = Console.ReadLine().ToUpper();
-
-                        if (choice == "N")
-                        {
-                            Console.WriteLine("Booking process terminated.");
-                            break;
-                        }
-                        else if (choice == "Y")
-                        {
-                            continue;
-                        }
+                        Console.WriteLine("Not enough tickets available. Please try again.");
                     }
                 }
             }
         }
+
         static bool IsTrainOperational(int trainId)
         {
             using (SqlConnection conn = Database.Instance.GetConnection())
@@ -692,55 +713,136 @@ namespace RailwayReservationSystem
                 checkStatusCmd.Parameters.AddWithValue("@TrainId", trainId);
                 bool isStalled = (bool)checkStatusCmd.ExecuteScalar();
 
-                return !isStalled; // If IsStalled is false, train is operational
+                return !isStalled; 
             }
         }
 
 
-
         static void CancelBooking()
         {
-            Console.Write("Enter User ID: ");
-            int userId = int.Parse(Console.ReadLine());
-            Console.Write("Enter Booking ID: ");
-            int bookingId = int.Parse(Console.ReadLine());
-
             using (SqlConnection conn = Database.Instance.GetConnection())
             {
-                try
+                conn.Open();
+
+                Console.Write("Enter User ID: ");
+                int userId = int.Parse(Console.ReadLine());
+
+                Console.Write("Enter Train ID: ");
+                int trainId = int.Parse(Console.ReadLine());
+
+                Console.Write("Enter Class: ");
+                string trainClass = Console.ReadLine().ToLower();
+
+                // Check if booking exists
+                string checkBookingQuery = @"
+            SELECT COUNT(*)
+            FROM Bookings
+            WHERE UserId = @UserId AND TrainId = @TrainId AND Class = @Class AND Status = 'Booked'";
+
+                using (SqlCommand checkBookingCmd = new SqlCommand(checkBookingQuery, conn))
                 {
-                    conn.Open();
+                    checkBookingCmd.Parameters.AddWithValue("@UserId", userId);
+                    checkBookingCmd.Parameters.AddWithValue("@TrainId", trainId);
+                    checkBookingCmd.Parameters.AddWithValue("@Class", trainClass);
 
-                    // Check if booking exists
-                    SqlCommand checkCmd = new SqlCommand("SELECT * FROM Bookings WHERE BookingId = @BookingId AND UserId = @UserId", conn);
-                    checkCmd.Parameters.AddWithValue("@BookingId", bookingId);
-                    checkCmd.Parameters.AddWithValue("@UserId", userId);
-                    SqlDataReader reader = checkCmd.ExecuteReader();
+                    int bookingCount = (int)checkBookingCmd.ExecuteScalar();
 
-                    if (reader.HasRows)
+                    if (bookingCount > 0)
                     {
-                        reader.Close();
-                        SqlCommand cmd = new SqlCommand("CancelBooking", conn);
-                        cmd.CommandType = CommandType.StoredProcedure;
-                        cmd.Parameters.AddWithValue("@BookingId", bookingId);
-                        cmd.ExecuteNonQuery();
-                        Console.WriteLine("Booking canceled successfully!");
+                        // Booking exists, proceed with cancellation
+                        string deleteBookingQuery = @"
+                    DELETE FROM Bookings
+                    WHERE UserId = @UserId AND TrainId = @TrainId AND Class = @Class";
 
-                        
+                        using (SqlCommand deleteBookingCmd = new SqlCommand(deleteBookingQuery, conn))
+                        {
+                            deleteBookingCmd.Parameters.AddWithValue("@UserId", userId);
+                            deleteBookingCmd.Parameters.AddWithValue("@TrainId", trainId);
+                            deleteBookingCmd.Parameters.AddWithValue("@Class", trainClass);
+                            deleteBookingCmd.ExecuteNonQuery();
+                        }
+
+                        // Update the available tickets
+                        string updateTicketsQuery = @"
+                    UPDATE Tickets
+                    SET AvailableTickets = AvailableTickets + 1
+                    WHERE TrainId = @TrainId AND Class = @Class";
+
+                        using (SqlCommand updateTicketsCmd = new SqlCommand(updateTicketsQuery, conn))
+                        {
+                            updateTicketsCmd.Parameters.AddWithValue("@TrainId", trainId);
+                            updateTicketsCmd.Parameters.AddWithValue("@Class", trainClass);
+                            updateTicketsCmd.ExecuteNonQuery();
+                        }
+
+                        Console.WriteLine("Booking successfully canceled!");
                     }
                     else
                     {
-                        Console.WriteLine("Booking not found for this user.");
+                        Console.WriteLine("No booking found for the given details.");
                     }
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine($"Error: {ex.Message}");
                 }
             }
         }
     }
 }
+
+
+
+
+//        static void CancelBooking()
+//        {
+//            Console.Write("Enter User ID: ");
+//            int userId = int.Parse(Console.ReadLine());
+//            Console.Write("Enter Booking ID: ");
+//            int bookingId = int.Parse(Console.ReadLine());
+//            //Console.WriteLine("Enter Train ID: ");
+//            //int trainId = int.Parse(Console.ReadLine());
+
+//            //Console.WriteLine("Enter Class (First, Second, Sleeper): ");
+//            //string classType = Console.ReadLine();
+
+//            //Console.WriteLine("Enter number of tickets to cancel: ");
+//            //int ticketsToCancel = int.Parse(Console.ReadLine());
+
+
+
+//            using (SqlConnection conn = Database.Instance.GetConnection())
+//            {
+//                try
+//                {
+//                    conn.Open();
+
+//                    // Check if booking exists
+//                    SqlCommand checkCmd = new SqlCommand("SELECT * FROM Bookings WHERE BookingId = @BookingId AND UserId = @UserId", conn);
+//                    checkCmd.Parameters.AddWithValue("@BookingId", bookingId);
+//                    checkCmd.Parameters.AddWithValue("@UserId", userId);
+//                    SqlDataReader reader = checkCmd.ExecuteReader();
+
+//                    if (reader.HasRows)
+//                    {
+//                        reader.Close();
+//                        SqlCommand cmd = new SqlCommand("CancelBooking", conn);
+//                        cmd.CommandType = CommandType.StoredProcedure;
+//                        cmd.Parameters.AddWithValue("@BookingId", bookingId);
+//                        cmd.ExecuteNonQuery();
+//                        Console.WriteLine("Booking canceled successfully!");
+
+
+//                    }
+//                    else
+//                    {
+//                        Console.WriteLine("Booking not found for this user.");
+//                    }
+//                }
+//                catch (Exception ex)
+//                {
+//                    Console.WriteLine($"Error: {ex.Message}");
+//                }
+//            }
+//        }
+//    }
+//}
 
 
 
@@ -802,7 +904,7 @@ namespace RailwayReservationSystem
 //                    if (!IsTrainOperational(trainId))
 //                    {
 //                        Console.WriteLine("The train is currently stalled and not operational. Booking cannot be cancelled for stalled trains.");
-//                        continue; // Skip further steps and loop again
+//                        continue; 
 //                    }
 
 //                    // Check if the booking exists
@@ -818,7 +920,7 @@ namespace RailwayReservationSystem
 //                        cancelCmd.ExecuteNonQuery();
 
 //                        Console.WriteLine("Booking cancelled successfully.");
-//                        break; // Exit the loop after successful cancellation
+//                        break; 
 //                    }
 //                    else
 //                    {
@@ -834,9 +936,85 @@ namespace RailwayReservationSystem
 //                        }
 //                        else if (choice == "Y")
 //                        {
-//                            continue; // Loop again for cancelling another booking
+//                            continue; 
 //                        }
 //                    }
+//                }
+//            }
+//        }
+//    }
+//}
+
+
+
+//static void BookTrain()
+//{
+//    while (true)
+//    {
+//        Console.Write("Enter Train ID: ");
+//        int trainId = int.Parse(Console.ReadLine());
+
+//        // Check if the train is not stalled adn then only proceed
+//        if (!IsTrainOperational(trainId))
+//        {
+//            Console.WriteLine("The train is currently stalled and not operational. Please select a different train.");
+//            continue;
+//        }
+
+//        Console.Write("Enter Class (First/Second/Sleeper): ");
+//        string trainClass = Console.ReadLine().ToLower();
+
+//        Console.Write("Enter Number of Tickets: ");
+//        int ticketsToBook = int.Parse(Console.ReadLine());
+
+//        using (SqlConnection conn = Database.Instance.GetConnection())
+//        {
+//            conn.Open();
+
+//            // Check availability first
+//            SqlCommand checkCmd = new SqlCommand("SELECT AvailableTickets FROM Tickets WHERE TrainId = @TrainId AND Class = @Class", conn);
+//            checkCmd.Parameters.AddWithValue("@TrainId", trainId);
+//            checkCmd.Parameters.AddWithValue("@Class", trainClass);
+//            int availableTickets = (int)checkCmd.ExecuteScalar();
+
+//            if (availableTickets >= ticketsToBook)
+//            {
+//                // Reduce available tickets
+//                SqlCommand updateCmd = new SqlCommand("UPDATE Tickets SET AvailableTickets = AvailableTickets - @TicketsToBook WHERE TrainId = @TrainId AND Class = @Class", conn);
+//                updateCmd.Parameters.AddWithValue("@TicketsToBook", ticketsToBook);
+//                updateCmd.Parameters.AddWithValue("@TrainId", trainId);
+//                updateCmd.Parameters.AddWithValue("@Class", trainClass);
+
+//                SqlParameter bookingIdParam = new SqlParameter("@BookingId", SqlDbType.Int)
+//                {
+//                    Direction = ParameterDirection.Output
+//                };
+//                updateCmd.Parameters.Add(bookingIdParam);
+
+//                updateCmd.ExecuteNonQuery();
+
+
+//                int pricePerTicket = GetPriceForClass(trainClass);
+//                int totalAmount = ticketsToBook * pricePerTicket;
+
+//                Console.WriteLine($"Booking successful! Total amount: Rs.{totalAmount}");
+//                break;
+//            }
+//            else
+//            {
+//                Console.WriteLine("Not enough seats available for the selected class. Please choose another class.");
+
+//                Console.Write("Do you want to try booking for another class? (Y/N): ");
+//                string choice = Console.ReadLine().ToUpper();
+
+//                if (choice == "N")
+//                {
+//                    Console.WriteLine("Booking process terminated.");
+//                    break;
+//                }
+//                else if (choice == "Y")
+//                {
+//                    continue;
 //                }
 //            }
 //        }
