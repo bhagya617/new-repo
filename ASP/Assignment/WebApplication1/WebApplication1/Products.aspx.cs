@@ -25,15 +25,15 @@ namespace WebApplication1
             switch (selectedProduct)
             {
                 case "1":
-                    Image1.ImageUrl = "images/img1.jpg";
+                    Image1.ImageUrl = "C:\dot net training\ASP\Assignment\WebApplication1\WebApplication1\images\Audi.jpg";
                     break;
 
                 case "2":
-                    Image1.ImageUrl = "images/img2.jpg";
+                    Image1.ImageUrl = "C:\dot net training\ASP\Assignment\WebApplication1\WebApplication1\images\Bugatti.jpg";
                     break;
 
                 case "3":
-                    Image1.ImageUrl = "images/img3.jpg";
+                    Image1.ImageUrl = "C:\dot net training\ASP\Assignment\WebApplication1\WebApplication1\images\MercedesBenz.jpg";
                     break;
 
                 default:
