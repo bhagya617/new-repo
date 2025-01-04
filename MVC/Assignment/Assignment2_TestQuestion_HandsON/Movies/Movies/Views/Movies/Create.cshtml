@@ -1,0 +1,19 @@
+﻿@model Movies.Models.Movie
+
+<h2>Create New Movie</h2>
+
+@using (Html.BeginForm())
+{
+@Html.AntiForgeryToken()
+
+                <div>
+                    <label>Movie Name:</label>
+                    @Html.TextBoxFor(m => m.Moviename)
+                </div>
+                                <div>
+                                    <label>Date of Release:</label>
+                                    @Html.TextBoxFor(m => m.DateofRelease, "{0:yyyy-MM-dd}")
+                                </div>
+                                                <div>
+                                                    <button type="submit">Save</button>
+                                                </div>}
