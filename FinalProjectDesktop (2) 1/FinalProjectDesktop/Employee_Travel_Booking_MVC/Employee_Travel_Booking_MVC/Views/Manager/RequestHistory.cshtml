@@ -1,0 +1,139 @@
+﻿
+
+@model IEnumerable<Employee_Travel_Booking_MVC.Models.travelrequest>
+
+@{ ViewBag.Title = "RequestHistory";
+    Layout = "~/Views/Shared/_ManagerLayout.cshtml"; }
+
+@*<h2>RequestHistory</h2>*@
+<style>
+    /* Custom CSS for table styling */
+    .table-container {
+        margin: 10px;
+        border-radius: 8px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        overflow-x: auto;
+    }
+
+    .table {
+        width: 100%;
+        border-collapse: collapse;
+        border-spacing: 0;
+        background-color: #ffffff;
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+    }
+
+        .table th,
+        .table td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #dee2e6;
+            color: #004d4d; /* Teal shade for text */
+            white-space: nowrap;
+        }
+
+        .table th {
+            background-color: #008080; /* Teal for headers */
+            color: #ffffff; /* White text for contrast */
+        }
+
+        .table tr:nth-child(even) {
+            background-color: #e0f7f7; /* Light teal for even rows */
+        }
+
+        .table tr:hover {
+            background-color: #b2dede; /* Slightly darker teal on hover */
+        }
+
+    .btn {
+        padding: 6px 12px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+    }
+
+    .btn-success {
+        background-color: #008080; /* Teal button */
+        color: #ffffff;
+    }
+
+        .btn-success:hover {
+            background-color: #006666; /* Darker teal on hover */
+        }
+
+    .btn-danger {
+        background-color: #b22222; /* Keep red for reject */
+        color: #ffffff;
+    }
+
+        .btn-danger:hover {
+            background-color: #8b1a1a;
+        }
+
+    .btn-info {
+        background-color: #007b83; /* Teal for info buttons */
+        color: #ffffff;
+    }
+
+        .btn-info:hover {
+            background-color: #005f60; /* Darker teal on hover */
+        }
+
+    .btn-primary {
+        background-color: #008080; /* Teal for the primary button */
+        color: #ffffff;
+    }
+
+        .btn-primary:hover {
+            background-color: #006666;
+        }
+</style>
+
+<h3>Request History Of Employees</h3>
+
+<div class="table-container">
+    <table class="table">
+        <thead>
+            <tr>
+                <th style="white-space: nowrap;">Request Id</th>
+                <th style="white-space: nowrap;">Employee Name</th>
+                <th style="white-space: nowrap;">Employee Email</th>
+                <th style="white-space: nowrap;">Employee Id</th>
+                <th style="white-space: nowrap;">Reason For Travel</th>
+                <th style="white-space: nowrap;">Flight Needed</th>
+                <th style="white-space: nowrap;">Hotel Needed</th>
+                <th style="white-space: nowrap;">Departure City</th>
+                <th style="white-space: nowrap;">Arrival City</th>
+                <th style="white-space: nowrap;">Departure Date</th>
+                <th style="white-space: nowrap;">Departure Time</th>
+                @*<th style="white-space: nowrap;">Additional Information</th>*@
+                <th style="white-space: nowrap;">Approval Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+<tr>
+    <td>@Html.DisplayFor(modelItem => item.requestid)</td>
+    <td>@Html.DisplayFor(modelItem => item.employeename)</td>
+    <td>@Html.DisplayFor(modelItem => item.employeeemail)</td>
+    <td>@Html.DisplayFor(modelItem => item.employeeid)</td>
+    <td>@Html.DisplayFor(modelItem => item.reasonfortravel)</td>
+    <td>@Html.DisplayFor(modelItem => item.modeoftransport)</td>
+    <td>@Html.DisplayFor(modelItem => item.hotelneeded)</td>
+    <td>@Html.DisplayFor(modelItem => item.departurecity)</td>
+    <td>@Html.DisplayFor(modelItem => item.arrivalcity)</td>
+    <td>@Html.DisplayFor(modelItem => item.departuredate)</td>
+    <td>@Html.DisplayFor(modelItem => item.departuretime)</td>
+  
+    <td>@Html.DisplayFor(modelItem => item.approvalstatus)</td>
+</tr>
+       }
+        </tbody>
+    </table>
+</div>
+
+<div style="margin-top: 20px; text-align: center;">
+    <a href="@Url.Action("ManagerDashboard", "Manager")" class="btn btn-primary">Back To Dashboard</a>
+</div>

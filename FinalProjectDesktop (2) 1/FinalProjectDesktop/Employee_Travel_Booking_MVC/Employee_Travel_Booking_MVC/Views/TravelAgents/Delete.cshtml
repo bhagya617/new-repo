@@ -1,0 +1,46 @@
+﻿@model Employee_Travel_Booking_MVC.Models.travelagent
+
+@{ ViewBag.Title = "Delete";
+                Layout = "~/Views/Shared/_AdminLayout.cshtml"; }
+
+<h2>Delete</h2>
+
+<h3>Are you sure you want to Change the status of this Agent</h3>
+<div>
+    <h4>travelagent</h4>
+    <hr />
+    <dl class="dl-horizontal">
+
+
+        <dt><strong> Name:</strong></dt>
+        <dd>
+            @Html.DisplayFor(model => model.name)
+        </dd>
+
+        <dt>
+        <dt><strong> Email:</strong></dt>
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.email)
+        </dd>
+
+        <dt>
+        <dt><strong> Password:</strong></dt>
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.travel_agent_password)
+        </dd>
+
+    </dl>
+
+    @using (Html.BeginForm())
+    {
+@Html.AntiForgeryToken()
+
+                <div class="form-actions no-color">
+                    <input type="submit" value="Update Status" class="btn btn-default" /> |
+                    @Html.ActionLink("Back to List", "Index")
+                </div>}
+</div>

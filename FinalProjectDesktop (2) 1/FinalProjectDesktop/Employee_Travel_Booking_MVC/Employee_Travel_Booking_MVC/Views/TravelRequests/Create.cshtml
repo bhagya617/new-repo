@@ -1,0 +1,341 @@
+﻿@model Employee_Travel_Booking_MVC.Models.travelrequest
+
+@{ ViewBag.Title = "Create";
+
+    Layout = "~/Views/Shared/_EmployeeLayout.cshtml"; }
+
+<h2 class="text-center mb-4">Travel Request</h2>
+
+<style>
+
+    .ui-datepicker {
+        font-size: 12px;
+        background-color: #fff;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        padding: 15px;
+        width: 250px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    }
+
+        .ui-datepicker .ui-datepicker-header {
+            background-color: #f0f0f0;
+            border-bottom: 1px solid #ccc;
+            padding: 15px;
+        }
+
+        .ui-datepicker .ui-datepicker-prev, .ui-datepicker .ui-datepicker-next {
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+            .ui-datepicker .ui-datepicker-prev:hover, .ui-datepicker .ui-datepicker-next:hover {
+                background-color: #ccc;
+                color: #fff;
+                text-decoration: none;
+            }
+
+        .ui-datepicker .ui-datepicker-days td {
+            padding: 15px;
+        }
+
+            .ui-datepicker .ui-datepicker-days td:hover {
+                background-color: #f0f0f0;
+            }
+
+            .ui-datepicker .ui-datepicker-days td.ui-datepicker-today {
+                background-color: #ccc;
+                color: #fff;
+            }
+
+            .ui-datepicker .ui-datepicker-days td.ui-datepicker-selected {
+                background-color: #337ab7;
+                color: #fff;
+            }
+
+        .ui-datepicker td {
+            width: 30px; /* or any other width you prefer */
+
+            height: 30px; /* or any other height you prefer */
+        }
+
+    .form-control {
+        padding: 10px;
+        height: 40px;
+    }
+</style>
+
+@using (Html.BeginForm(null, null, FormMethod.Post, new { enctype = "multipart/form-data" }))
+
+{
+
+    @Html.AntiForgeryToken()
+
+                    <div class="form-horizontal">
+                        <hr />
+
+                        <!-- Travel Reason -->
+                        <div class="form-group">
+
+                            @Html.LabelFor(model => model.reasonfortravel, "Travel Reason:", htmlAttributes: new { @class = "col-md-2 col-form-label" })
+                            <div class="col-md-10">
+
+                                @Html.DropDownListFor(model => model.reasonfortravel,
+
+                                                                  new SelectList(new[] {
+
+                        new { Value = "Auditing", Text = "Auditing" },
+
+                        new { Value = "Business Meetings", Text = "Business Meetings" },
+
+                        new { Value = "Client Meeting", Text = "Client Meeting" },
+
+                        new { Value = "Conference", Text = "Conference" },
+
+                        new { Value = "On site Transfer", Text = "On site Transfer" },
+
+                        new { Value = "Site Visit", Text = "Site Visit" },
+
+                        new { Value = "Project Related", Text = "Project Related" },
+
+                        new { Value = "Training", Text = "Training" },
+
+                        new { Value = "Other", Text = "Other" }
+
+                  }, "Value", "Text"), "-- Select a Reason --",
+
+                                                                  new { @class = "form-control", required = "required" })
+
+                                @Html.ValidationMessageFor(model => model.reasonfortravel, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <!-- Mode of Transport -->
+                        <div class="form-group">
+
+                            @Html.LabelFor(model => model.modeoftransport, "Mode of Transport:", htmlAttributes: new { @class = "col-md-2 col-form-label" })
+                            <div class="col-md-10">
+
+                                @Html.DropDownListFor(model => model.modeoftransport, new SelectList(new[] { "Bus", "Train", "Flight" }), "-- Select --", new { @class = "form-control", required = "required" })
+
+                                @Html.ValidationMessageFor(model => model.modeoftransport, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <!-- Hotel -->
+                        <div class="form-group">
+
+                            @Html.LabelFor(model => model.hotelneeded, "Hotel:", htmlAttributes: new { @class = "col-md-2 col-form-label" })
+                            <div class="col-md-10">
+
+                                @Html.DropDownListFor(model => model.hotelneeded, new SelectList(new[] { "Yes", "No" }), "-- Select --", new { @class = "form-control", required = "required" })
+
+                                @Html.ValidationMessageFor(model => model.hotelneeded, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <!-- City Type -->
+                        <div class="form-group">
+
+                            @Html.Label("City Type:", htmlAttributes: new { @class = "col-md-2 col-form-label" })
+                            <div class="col-md-10">
+
+                                @Html.DropDownList("CityType", new SelectList(new[] { "Domestic", "International" }), "-- Select --", new { @class = "form-control", id = "cityTypeSelector", required = "required" })
+                            </div>
+                        </div>
+                        <!-- Departure City -->
+                        <!-- Departure City -->
+                        <div class="form-group">
+
+                            @Html.LabelFor(model => model.departurecity, "Departure City:", htmlAttributes: new { @class = "col-md-2 col-form-label" })
+                            <div class="col-md-10">
+
+                                @Html.TextBoxFor(model => model.departurecity, new { @class = "form-control", id = "departureCityInput", required = "required", placeholder = "Enter departure city" })
+
+                                @Html.ValidationMessageFor(model => model.departurecity, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+
+                        <!-- Arrival City -->
+                        <div class="form-group">
+
+                            @Html.LabelFor(model => model.arrivalcity, "Arrival City:", htmlAttributes: new { @class = "col-md-2 col-form-label" })
+                            <div class="col-md-10">
+
+                                @Html.TextBoxFor(model => model.arrivalcity, new { @class = "form-control", id = "arrivalCityInput", required = "required", placeholder = "Enter arrival city" })
+
+                                @Html.ValidationMessageFor(model => model.arrivalcity, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <!-- Departure Date -->
+                        <div class="form-group">
+
+                            @Html.LabelFor(model => model.departuredate, "Departure Date:", htmlAttributes: new { @class = "col-md-2 col-form-label" })
+                            <div class="col-md-10">
+                                <div class="input-group">
+
+                                    @Html.EditorFor(model => model.departuredate, new { htmlAttributes = new { @class = "form-control", required = "required", id = "departuredate", placeholder = "YYYY-MM-DD" } })
+                                </div>
+
+                                @Html.ValidationMessageFor(model => model.departuredate, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <!-- Departure Time -->
+
+                        @{ List<SelectListItem> timeOptions = new List<SelectListItem>();
+
+                            for (int i = 0; i < 24; i++)
+
+                            {
+
+                                for (int j = 0; j < 60; j += 15)
+
+                                { // Add options every 15 minutes
+
+                                    timeOptions.Add(new SelectListItem { Text = $"{i:D2}:{j:D2}", Value = $"{i:D2}:{j:D2}" });
+
+                                }
+
+                            } }
+                        <div class="form-group">
+
+                            @Html.LabelFor(model => model.departuretime, "Departure Time:", htmlAttributes: new { @class = "col-md-2 col-form-label" })
+                            <div class="col-md-10">
+
+                                @Html.DropDownListFor(model => model.departuretime, timeOptions, "Select Time", new { @class = "form-control", required = "required" })
+
+                                @Html.ValidationMessageFor(model => model.departuretime, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <!-- Additional Information -->
+                        @*<div class="form-group">
+
+                                            @Html.LabelFor(model => model.additionalinformation, "Additional Information:", htmlAttributes: new { @class = "col-md-2 col-form-label" })
+                            <div class="col-md-10">
+
+                                                @Html.TextAreaFor(model => model.additionalinformation, new { @class = "form-control", required = "required", placeholder = "Enter your additional details", rows = "5" })
+
+                                                @Html.ValidationMessageFor(model => model.additionalinformation, "", new { @class = "text-danger" })
+                            </div>
+                            </div>*@
+
+                        <!-- Identity Proof -->
+                        @*<div class="form-group">
+
+                                            @Html.LabelFor(model => model.IdentityProofPath, "Identity Proof:", htmlAttributes: new { @class = "col-md-2 col-form-label", required = "required" })
+                            <div class="col-md-10">
+                            <input type="file" name="IdentityProofFile" class="form-control" />
+                            </div>
+                            </div>*@
+
+                        <!-- Submit Button -->
+                        <div class="form-group">
+                            <div class="col-md-offset-2 col-md-10">
+                                <input type="submit" value="Create Request" class="btn btn-primary" id="submitButton" />
+                            </div>
+                        </div>
+                    </div>}
+
+<div class="text-center mt-3">
+
+    @Html.ActionLink("Back to Dashboard", "Index", null, new { @class = "btn btn-info btn-sm details-btn" })
+</div>
+
+@section Scripts {
+
+    @Scripts.Render("~/bundles/jqueryval")
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+    <script>
+
+        $(function () {
+
+            // Initialize the datepicker for the departure date
+
+            $("#departuredate").datepicker({
+
+                dateFormat: "yy-mm-dd",
+
+                minDate: 0 // Prevent selecting past dates
+
+            });
+
+
+
+            // Validate form inputs on submission
+
+            $("#submitButton").click(function (e) {
+
+                // Retrieve values from the text inputs and normalize them
+
+                var departureCity = $("#departureCityInput").val().trim().toLowerCase();
+
+                var arrivalCity = $("#arrivalCityInput").val().trim().toLowerCase();
+
+                var departureDate = $("#departuredate").val(); // Get the selected date
+
+                // Check if both cities are filled
+
+                if (!departureCity || !arrivalCity) {
+
+                    alert("Both Departure City and Arrival City must be filled out.");
+
+                    e.preventDefault(); // Prevent form submission
+
+                    return false;
+
+                }
+
+                // Check if departure city and arrival city are the same
+
+                if (departureCity === arrivalCity) {
+
+                    alert("Departure City and Arrival City cannot be the same. Please choose different cities.");
+
+                    e.preventDefault(); // Prevent form submission
+
+                    return false;
+
+                }
+
+                // Validate that a date is selected
+
+                if (!departureDate) {
+
+                    alert("Please select a valid departure date.");
+
+                    e.preventDefault(); // Prevent form submission
+
+                    return false;
+
+                }
+
+                // Validate that the selected date is not in the past
+
+                var selectedDate = new Date(departureDate);
+
+                var today = new Date();
+
+                today.setHours(0, 0, 0, 0); // Normalize today's date to midnight
+
+                if (selectedDate < today) {
+
+                    alert("Departure date cannot be in the past. Please select a valid date.");
+
+                    e.preventDefault(); // Prevent form submission
+
+                    return false;
+
+                }
+
+            });
+
+        });
+    </script>
+
+}
+

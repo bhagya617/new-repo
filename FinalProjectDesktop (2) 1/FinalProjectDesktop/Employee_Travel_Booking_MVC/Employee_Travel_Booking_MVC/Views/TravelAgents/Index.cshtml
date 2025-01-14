@@ -1,0 +1,128 @@
+﻿@model IEnumerable<Employee_Travel_Booking_MVC.Models.travelagent>
+@{ ViewBag.Title = "Travel Agents";
+                Layout = "~/Views/Shared/_AdminLayout.cshtml"; }
+<!DOCTYPE html>
+<html>
+<head>
+    <title>@ViewBag.Title</title>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Nunito, sans-serif;
+        }
+
+        h2 {
+            color: #008080; /* Teal */
+            margin-bottom: 20px;
+        }
+
+        .btn-primary {
+            background-color: #008080; /* Teal */
+            border-color: #007070; /* Darker Teal */
+            color: #fff;
+        }
+
+            .btn-primary:hover {
+                background-color: #006060; /* Darker shade for hover */
+            }
+
+        .btn-info {
+            background-color: #008080; /* Teal */
+            border-color: #007070;
+            color: #fff;
+        }
+
+            .btn-info:hover {
+                background-color: #006060; /* Darker shade for hover */
+            }
+
+        .btn-danger {
+            background-color: #d9534f; /* Red for danger */
+            border-color: #d43f3a;
+        }
+
+        .btn-success {
+            background-color: #5cb85c; /* Green for success */
+            border-color: #4cae4c;
+        }
+
+        .thead-dark {
+            background-color: #007070; /* Dark Teal */
+            color: #fff;
+        }
+
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+            .table th, .table td {
+                border: 1px solid #ddd;
+                padding: 8px;
+                text-align: left;
+            }
+
+            .table th {
+                background-color: #007070; /* Dark Teal */
+                color: white;
+            }
+
+        .button-group {
+            display: flex;
+        }
+
+            .button-group .btn {
+                margin-right: 5px;
+            }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Travel Agents</h2>
+        <p>
+            @Html.ActionLink("Create New", "Create", null, new { @class = "btn btn-primary" })
+        </p>
+        <table class="table">
+            <thead class="thead-dark">
+                <tr>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Password</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+    <tr>
+        <td>@Html.DisplayFor(modelItem => item.name)</td>
+        <td>@Html.DisplayFor(modelItem => item.email)</td>
+        <td>@Html.DisplayFor(modelItem => item.travel_agent_password)</td>
+        <td>@(item.status == true ? "Active" : "Inactive")</td>
+        <td>
+            <div class="button-group">
+                @Html.ActionLink("Edit", "Edit", new { id = item.agentid }, new { @class = "btn btn-primary btn-sm" })
+                @Html.ActionLink("Details", "Details", new { id = item.agentid }, new { @class = "btn btn-info btn-sm" })
+                @if (item.status == true)
+                {
+@Html.ActionLink("Inactive", "Delete", new { id = item.agentid }, new { @class = "btn btn-danger btn-sm" }) }
+else
+{
+@Html.ActionLink("Active", "Delete", new { id = item.agentid }, new { @class = "btn btn-success btn-sm" })}
+            </div>
+        </td>
+    </tr>
+}
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>

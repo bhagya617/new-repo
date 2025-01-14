@@ -1,0 +1,182 @@
+﻿@model IEnumerable<Employee_Travel_Booking_MVC.Models.travelrequest>
+@{ ViewBag.Title = "AgentIndex";
+                Layout = "~/Views/Shared/_AgentLayout.cshtml"; }
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Travel Agent Dashboard - Pending Travel Requests</title>
+    <style>
+        /* Heading Style */
+        h2 {
+            text-align: left;
+            font-family: Arial, sans-serif;
+            color: #00796b; /* Teal shade for headings */
+            margin-bottom: 20px;
+        }
+
+        h3 {
+            color: #006666; /* Teal shade for subheadings */
+        }
+        /* Table Style */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            border: 1px solid #004d4d; /* Teal border */
+            margin-bottom: 20px;
+        }
+
+        th, td {
+            border: 1px solid #004d4d; /* Teal border */
+            padding: 8px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #004d4d; /* Teal header background */
+            color: #ffffff; /* White text */
+        }
+
+        td {
+            background-color: #e6f7f7; /* Light teal background */
+            color: #004d4d; /* Teal text */
+        }
+        /* Button Style */
+        .btn {
+            background-color: #008080; /* Teal button background */
+            color: #ffffff; /* White text */
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+            .btn:hover {
+                background-color: #005959; /* Darker teal for hover */
+            }
+        /* Status Dropdown Style */
+        .form-control {
+            width: 150px;
+            border: 1px solid #004d4d; /* Teal border */
+            border-radius: 4px;
+            padding: 4px;
+        }
+        /* Alerts */
+        .alert {
+            margin-top: 10px;
+            margin-bottom: 10px;
+            padding: 10px;
+            border-radius: 4px;
+        }
+
+        .alert-success {
+            background-color: #e6f7f7; /* Light teal for success alert */
+            color: #004d4d; /* Teal text */
+        }
+
+        .alert-danger {
+            background-color: #ffe6e6; /* Light red for error alert */
+            color: #800000; /* Dark red text */
+        }
+    </style>
+</head>
+<body>
+    <h2 class="text-center mb-4">Agent Dashboard</h2>
+    <h3>Pending Travel Requests</h3>
+    <div>
+        @if (Model.Count() > 0)
+        {
+<table>
+    <thead>
+        <tr>
+            <th>Request ID</th>
+            <th>Employee Name</th>
+            <th>Employee Email</th>
+            <th>Reason for Travel</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var request in Model.Where(r => (r.bookingstatus == "Pending" && r.approvalstatus == "Approved")))
+        {
+<tr>
+    <td>@request.requestid</td>
+    <td>@request.employeename</td>
+    <td>@request.employeeemail</td>
+    <td>@request.reasonfortravel</td>
+    <td>
+        @using (Html.BeginForm("UpdateStatus", "AgentDashboard", FormMethod.Post, new { @class = "form-inline", role = "form" }))
+        {
+@Html.AntiForgeryToken()
+                        @Html.Hidden("requestId", (int)request.requestid)
+                                                <div class="form-group">
+                                                    <label for="status">Change Status:</label>
+                                                    <select class="form-control" name="status" required placeholder="Select Status">
+                                                        <option value="" disabled selected>Select Status</option>
+                                                        <option value="Confirmed">Confirmed</option>
+                                                        <option value="Not available">Not available</option>
+                                                    </select>
+                                                </div>
+                                                                        <button type="submit" class="btn">Update</button>}
+    </td>
+</tr>}
+    </tbody>
+</table> }
+            else
+            {
+<p>No pending travel requests.</p>}
+        @if (TempData["SuccessMessage"] != null)
+        {
+<div id="successMessage" class="alert alert-success">
+    @TempData["SuccessMessage"]
+</div>}
+        @if (TempData["ErrorMessage"] != null)
+        {
+<div class="alert alert-danger">
+    @TempData["ErrorMessage"]
+</div>}
+    </div>
+    <div>
+        <h3>Travel Request History</h3>
+        <div>
+            @if (Model.Count() > 0)
+            {
+<table>
+    <thead>
+        <tr>
+            <th>Request ID</th>
+            <th>Employee Name</th>
+            <th>Employee Email</th>
+            <th>Reason for Travel</th>
+            <th>Status</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var request in Model.Where(r => r.bookingstatus != "Pending"))
+        {
+<tr>
+    <td>@request.requestid</td>
+    <td>@request.employeename</td>
+    <td>@request.employeeemail</td>
+    <td>@request.reasonfortravel</td>
+    <td>@request.bookingstatus</td>
+</tr>}
+    </tbody>
+</table> }
+            else
+            {
+<p>No travel request history available.</p>}
+        </div>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        // Automatically hide the success message after 2 seconds
+        $(document).ready(function () {
+            setTimeout(function () {
+                $("#successMessage").fadeOut("slow");
+            }, 2000); // 2000 milliseconds = 2 seconds
+        });
+    </script>
+</body>
+</html>

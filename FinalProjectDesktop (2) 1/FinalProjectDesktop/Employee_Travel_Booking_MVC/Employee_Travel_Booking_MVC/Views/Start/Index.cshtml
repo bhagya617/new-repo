@@ -1,0 +1,310 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Travel Request Management System</title>
+    <link rel="stylesheet" href="train.css">
+</head>
+<style>
+
+    /* Reset default browser styles */
+
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    /* Global Styles */
+
+    body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        line-height: 1.6;
+        background-color: #bb1fde;
+        color: #333;
+        background: url('https://png.pngtree.com/thumb_back/fh260/back_our/20190622/ourmid/pngtree-travel-summer-travel-blue-cartoon-poster-background-image_231684.jpg')no-repeat center center fixed;
+        background-size: cover;
+    }
+
+    .container {
+        max-width: 1100px;
+        margin: auto;
+        padding: 0 50px;
+        position: relative; /* for logo */
+    }
+
+    header {
+        background-color: #303f9f;
+        color: #fff;
+        padding: 20px 0;
+    }
+
+        header h2 {
+            font-size: 2.5rem;
+            text-align: center;
+            color: #1976D2; /* Blue color */
+
+            font-weight: bold; /* Bold font */
+        }
+
+    nav ul {
+        list-style: none;
+        text-align: center;
+    }
+
+        nav ul li {
+            display: inline;
+            margin-right: 20px;
+        }
+
+            nav ul li a {
+                color: #fff;
+                text-decoration: none;
+                font-size: 1.1rem;
+                transition: color 0.3s ease;
+            }
+
+                nav ul li a:hover {
+                    color: #f4f4f4;
+                }
+
+    .hero {
+        background-position: center;
+        color: #fff;
+        text-align: center;
+        padding: 150px 0;
+    }
+
+    .container h2,
+    .container p {
+        color: #333; /* Change to your desired text color */
+    }
+
+
+    .hero p {
+        font-size: 1.3rem; /* Increased description text size */
+
+        margin-bottom: 30px; /* Adjusted margin */
+    }
+
+    .hero .btn {
+        background-color: black; /* Updated button color */
+
+        color: #fff;
+        padding: 15px 40px; /* Increased button padding */
+
+        font-size: 1.4rem; /* Increased button font size */
+
+        text-decoration: none;
+        border: none;
+        border-radius: 10px; /* Rounded button corners */
+    }
+
+
+
+
+    @@keyframes pulse {
+
+        0% {
+            transform: scale(1);
+            box-shadow: 0 0 0 0 rgba(0, 0, 0, 0.7);
+        }
+
+        70% {
+            transform: scale(1.1);
+            box-shadow: 0 0 0 10px rgba(255, 152, 0, 0);
+        }
+
+        100% {
+            transform: scale(1);
+            box-shadow: 0 0 0 0 rgba(0, 0, 0, 0);
+        }
+    }
+
+    .features {
+        background-color: #f0f0f0; /* Light grey background color */
+
+        padding: 60px 0;
+    }
+
+
+        .features h2 {
+            text-align: center;
+            margin-bottom: 40px;
+            font-size: 2.5rem;
+            color: #333;
+        }
+
+    .feature {
+        text-align: center;
+        margin-bottom: 40px;
+    }
+
+        .feature h3 {
+            font-size: 1.8rem;
+            margin-bottom: 10px;
+            color: #303f9f;
+        }
+
+        .feature p {
+            font-size: 1.2rem;
+            color: #666;
+        }
+
+    .about {
+        background-color: #f5f5f5;
+        padding: 80px 0;
+    }
+
+        .about h2 {
+            text-align: center;
+            margin-bottom: 40px;
+            font-size: 3rem;
+            color: #333;
+        }
+
+        .about p {
+            text-align: center;
+            font-size: 1.2rem;
+            color: #666;
+            margin-bottom: 30px;
+        }
+
+    .contact {
+        background-image: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('contact-bg.jpg');
+        background-size: cover;
+        background-position: center;
+        padding: 100px 0;
+        color: #fff;
+    }
+
+        .contact h2 {
+            text-align: center;
+            margin-bottom: 40px;
+            font-size: 3rem;
+        }
+
+        .contact p {
+            text-align: center;
+            font-size: 1.2rem;
+            margin-bottom: 30px;
+        }
+
+        .contact form {
+            max-width: 600px;
+            margin: auto;
+        }
+
+        .contact input,
+        .contact textarea {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border: none;
+            border-radius: 5px;
+        }
+
+        .contact button {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            background-color: #303f9f;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+            .contact button:hover {
+                background-color: #5c6bc0;
+            }
+
+    footer {
+        background-color: black;
+        color: #fff;
+        text-align: center;
+        padding: 20px 0;
+    }
+
+    /* Helpdesk Button Styles */
+
+    .helpdesk {
+        position: fixed;
+        top: 50px;
+        right: 50px;
+        background-color: #303f9f;
+        padding: 10px;
+        border-radius: 5px;
+        color: #fff;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+        z-index: 1000;
+    }
+
+    .helpdesk-link {
+        display: block;
+        color: #fff;
+        text-decoration: none;
+        margin-bottom: 8px;
+        font-size: 1rem;
+        font-weight: bold;
+    }
+
+        .helpdesk-link:hover {
+            color: #ffa726;
+        }
+
+    .icon {
+        margin-right: 8px;
+    }
+
+    /* Logo Styling */
+
+    .logo {
+        position: absolute;
+        top: 10px;
+        left: 10px;
+        width: 100px; /* Adjust as needed */
+
+        height: auto; /* Maintain aspect ratio */
+
+        z-index: 1000; /* Ensure it sits above other elements */
+    }
+</style>
+<body>
+
+    <!-- Helpdesk Button -->
+    <!--  <div class="helpdesk">
+    <a href="mailto:Support@infinite.com" class="helpdesk-link">
+    <span class="icon">📧</span> support@example.com
+    </a>
+    <a href="tel:7036775977" class="helpdesk-link">
+    <span class="icon">📞</span> +1 (234) 567-890
+    </a>
+    </div>  -->
+    <!-- Logo -->
+    <!--  <img src="~/Gallery/InfiniteLogo.png" alt="Infinite Computer Solutions" class="logo" style="margin-top:50px; height:150px;width:300px;background-image:inherit;">   -->
+    <!--<header>-->
+    @*<div class="container">*@
+
+    <!--</header>-->
+    <main>
+        <section class="hero">
+
+            <div class="container" style="color:Black">
+                <h2 style="color:Black;">Welcome to Employee Travel Booking</h2>
+                <h3 style="color:white;">Have a Safe Journey</h3>
+                <br />
+                <br />
+                <a href="@Url.Action("Create", "Menu")" class="btn">Get Started</a>
+            </div>
+        </section>
+
+
+    </main>
+
+</body>
+</html>
+

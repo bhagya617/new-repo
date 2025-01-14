@@ -1,0 +1,107 @@
+﻿<!--@{ ViewBag.Title = "Index"; }
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title</title>
+    <link rel="stylesheet" href="path-to-your-stylesheet.css">-->
+ <!-- Optional external stylesheet -->
+<!--<style>
+
+        .middle {
+            background-position: center;
+            color: #000000;
+            text-align: center;
+            padding: 15px 0;
+        }
+
+            .middle .btn {
+                background-color: black; /* Button color */
+
+                color: #ffffff; /* Text color */
+
+                padding: 20px 60px; /* Increased padding for larger buttons */
+
+                font-size: 2rem; /* Increased font size for larger text */
+
+                text-decoration: none;
+                border: none;
+                border-radius: 15px; /* Rounded button corners */
+
+                cursor: pointer;
+                transition: background-color 0.3s ease; /* Optional: smooth transition for hover effect */
+            }
+
+                .middle .btn:hover {
+                    background-color: #ffa726; /* Change button color on hover */
+                }
+    </style>
+</head>
+<body style="background: url('https://img.freepik.com/free-vector/flat-background-world-tourism-day-celebration_23-2149604118.jpg') no-repeat center center fixed; background-size: cover;">
+
+    <section class="middle">
+        <center>
+            <h1>Choose Your Role</h1><br/>
+            <button onclick="location.href='@Url.Action("Login", "AdminLogin", new { role = "Admin" })'" class="btn">Login as Admin</button><br /><br />
+            <button onclick="location.href='@Url.Action("Login", "EmployeeLogin", new { role = "Employee" })'" class="btn">Login as Employee</button><br /><br />
+            <button onclick="location.href='@Url.Action("ManagerLogin", "ManagerLogin", new { role = "ManagerMenu" })'" class="btn">Login as Manager</button><br /><br />
+            <button onclick="location.href='@Url.Action("Login", "AgentLogin", new { role = "TravelAgent" })'" class="btn">Login as Travel Agent</button><br /><br />
+        </center>
+    </section>
+
+</body>
+</html>-->
+@{ ViewBag.Title = "Index"; }
+
+<h1>Welcome, @ViewBag.EmployeeName</h1>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title</title>
+    <link rel="stylesheet" href="path-to-your-stylesheet.css"> <!-- Optional external stylesheet -->
+    <style>
+
+        .middle {
+            background-position: center;
+            color: #000000;
+            text-align: center;
+            padding: 15px 0;
+        }
+
+            .middle .btn {
+                background-color: black;
+                color: #ffffff;
+                padding: 20px 60px;
+                font-size: 2rem;
+                text-decoration: none;
+                border: none;
+                border-radius: 15px;
+                cursor: pointer;
+                transition: background-color 0.3s ease;
+            }
+
+                .middle .btn:hover {
+                    background-color: #ffa726;
+                }
+    </style>
+</head>
+<body style="background: url('https://img.freepik.com/free-vector/realistic-travel-background-with-elements_52683-77784.jpg ') no-repeat center center fixed; background-size: cover;">
+    <section class="middle">
+        <center>
+            <h1>Please Select</h1><br/>
+            <button onclick="location.href='@Url.Action("Login", "AdminLogin", new { role = "Admin" })'" class="btn">Admin Login</button><br /><br />
+            <button onclick="location.href='@Url.Action("Login", "EmployeeLogin", new { role = "Employee" })'" class="btn"> Employee Login</button><br /><br />
+            <button onclick="location.href='@Url.Action("ManagerLogin", "ManagerLogin", new { role = "ManagerMenu" })'" class="btn">Manager Login</button><br /><br />
+            <button onclick="location.href='@Url.Action("Login", "AgentLogin", new { role = "TravelAgent" })'" class="btn">Travel Agent Login</button><br /><br />
+        </center>
+    </section>
+</body>
+</html>
+
+
+
